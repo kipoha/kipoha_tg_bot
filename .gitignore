@@ -4,3 +4,4 @@ venv
 __pycache__/
 handlers/__pycache__/
 db/
+media

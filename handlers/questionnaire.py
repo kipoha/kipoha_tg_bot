@@ -3,7 +3,6 @@ from config import bot
 from database import databases
 from keyboards import inline_buttons
 
-
 async def kipoha_question(call: types.CallbackQuery):
     await bot.send_message(
         chat_id=call.from_user.id,
