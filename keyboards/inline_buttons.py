@@ -14,8 +14,13 @@ async def kipoha_start_keyboard():
         "Check ban user 💢",
         callback_data="bans"
     )
+    reg = InlineKeyboardButton(
+        "Registration ✅",
+        callback_data="reg"
+    )
     markup.add(question_button)
     markup.add(ban)
+    markup.add(reg)
     return markup
 
 

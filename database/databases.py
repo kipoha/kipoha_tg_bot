@@ -22,6 +22,19 @@ class DataBase:
                 telegram_id INTEGER,
                 ban_count INTEGER,
                 UNIQUE (telegram_id)
+                );
+                
+            CREATE TABLE IF NOT EXISTS profile (
+                id INTEGER NOT NULL UNIQUE PRIMARY KEY AUTOINCREMENT,
+                telegram_id INTEGER,
+                nickname CHAR(50),
+                bio TEXT,
+                age INTEGER,
+                zodiac_sign CHAR(50),
+                games TEXT,
+                country TEXT,
+                photo TEXT,
+                UNIQUE (telegram_id)
                 )
             """
             cursor.executescript(query)
@@ -33,6 +46,14 @@ class DataBase:
             query = """INSERT INTO users VALUES (?,?,?,?,?)"""
             cursor.execute(query, (None, tg_id, username, first_name, last_name))
             db.commit()
+
+    def kipoha_add_profile(self, tg_id, nickname, bio, age, sign, games, country, photo):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO profile VALUES (?,?,?,?,?,?,?,?,?)"""
+            cursor.execute(query, (None, tg_id, nickname, bio, age, sign, games, country, photo))
+            db.commit()
+
 
     def kipoha_add_ban_user(self, tg_id):
         with sqlite3.connect(self.name) as db:
@@ -66,3 +87,17 @@ class DataBase:
             query = """SELECT * FROM ban_users WHERE telegram_id = ?"""
             cursor.execute(query, (tg_id,))
             return cursor.fetchone()
+
+    def kipoha_select_profile(self, tg_id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """SELECT * FROM profile WHERE telegram_id = ?"""
+            cursor.execute(query, (tg_id,))
+            return cursor.fetchone()
+
+    def kipoha_update_profile(self, tg_id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """UPDATE profile SET telegram_id = ?"""
+            cursor.execute(query, (tg_id,))
+            db.commit()

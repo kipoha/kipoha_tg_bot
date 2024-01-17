@@ -65,7 +65,7 @@ async def steve_answers(call: types.CallbackQuery):
     )
 
 
-def register_questionnaire_handlers(dp: Dispatcher):
+def reg_questionnaire_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(kipoha_question,
                                        lambda call: call.data == "question")
     dp.register_callback_query_handler(disnake_answers,

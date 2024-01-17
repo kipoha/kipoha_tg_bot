@@ -25,6 +25,6 @@ async def check_ban(call: types.CallbackQuery):
     # )
     # print('banned')
 
-def register_bans_handlers(dp: Dispatcher):
+def reg_bans_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(check_ban,
                                        lambda call: call.data == "bans")
