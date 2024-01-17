@@ -17,6 +17,16 @@ class RegistrationStates(StatesGroup):
     photo = State()
 
 async def reg_start(call: types.CallbackQuery):
+    db = databases.DataBase()
+    pr = db.kipoha_select_profile(call.from_user.id)
+    if pr:
+        await bot.send_message(
+            chat_id=call.from_user.id,
+            text='U r already registered'
+            # text='U r already registered, to update ur profile, click on the button below',
+            # reply_markup=await inline_buttons.kipoha_update_profile_button()
+        )
+        return
     await bot.send_message(
         chat_id=call.from_user.id,
         text='Send me ur Nickname, please!'

@@ -83,3 +83,45 @@ async def third_question():
     markup.add(pavel)
     markup.add(steve)
     return markup
+
+async def kipoha_update_profile_button():
+    markup = InlineKeyboardMarkup()
+    pr_button = InlineKeyboardButton(
+        "Update Profile 🔁",
+        callback_data="pr_update"
+    )
+    markup.add(pr_button)
+    return markup
+
+async def kipoha_select_profile_button():
+    markup = InlineKeyboardMarkup()
+    nick = InlineKeyboardButton(
+        "Nickname 👤",
+        callback_data="nick"
+    )
+    bio = InlineKeyboardButton(
+        "Biography 👥",
+        callback_data="bio"
+    )
+    age = InlineKeyboardButton(
+        "Age 🕐",
+        callback_data="age"
+    )
+    sign = InlineKeyboardButton(
+        "Zodiac Sign ❓",
+        callback_data="sign"
+    )
+    f_game = InlineKeyboardButton(
+        "Favorite games 🎮",
+        callback_data="f_game"
+    )
+    country = InlineKeyboardButton(
+        "Country 🌐",
+        callback_data="country"
+    )
+    photo = InlineKeyboardButton(
+        "Photo 📷",
+        callback_data="photo"
+    )
+    markup.add(nick, bio, age, sign, f_game, country, photo)
+    return markup

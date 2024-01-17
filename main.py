@@ -6,6 +6,7 @@ from handlers import (
     chat_actions,
     check_ban,
     registration,
+    # update_profile,
 )
 from database import databases
 
@@ -19,6 +20,7 @@ start.reg_kipoha_start_handlers(dp=dp)
 questionnaire.reg_questionnaire_handlers(dp=dp)
 check_ban.reg_bans_handlers(dp=dp)
 registration.reg_registration_handlers(dp=dp)
+# update_profile.reg_update_profile_handlers(dp=dp)
 chat_actions.reg_chat_actions_handlers(dp=dp)
 
 if __name__ == "__main__":
