@@ -88,16 +88,16 @@ class DataBase:
             cursor.execute(query, (tg_id,))
             return cursor.fetchone()
 
-    def kipoha_select_profile(self, tg_id):
-        with sqlite3.connect(self.name) as db:
-            cursor = db.cursor()
-            query = """SELECT * FROM profile WHERE telegram_id = ?"""
-            cursor.execute(query, (tg_id,))
-            return cursor.fetchone()
-
-    def kipoha_update_profile(self, tg_id):
-        with sqlite3.connect(self.name) as db:
-            cursor = db.cursor()
-            query = """UPDATE profile SET telegram_id = ?"""
-            cursor.execute(query, (tg_id,))
-            db.commit()
+    # def kipoha_select_profile(self, tg_id):
+    #     with sqlite3.connect(self.name) as db:
+    #         cursor = db.cursor()
+    #         query = """SELECT * FROM profile WHERE telegram_id = ?"""
+    #         cursor.execute(query, (tg_id,))
+    #         return cursor.fetchone()
+    #
+    # def kipoha_update_profile(self, tg_id):
+    #     with sqlite3.connect(self.name) as db:
+    #         cursor = db.cursor()
+    #         query = """UPDATE profile SET telegram_id = ?"""
+    #         cursor.execute(query, (tg_id,))
+    #         db.commit()
