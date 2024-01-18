@@ -35,7 +35,14 @@ class DataBase:
                 country TEXT,
                 photo TEXT,
                 UNIQUE (telegram_id)
-                )
+                );
+                
+            CREATE TABLE IF NOT EXISTS surveys (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                idea TEXT,
+                problems TEXT,
+                telegram_id INTEGER
+            )
             """
             cursor.executescript(query)
             db.commit()
@@ -108,3 +115,24 @@ class DataBase:
                 WHERE telegram_id = ?"""
             cursor.execute(query, (nickname, bio, age, sign, games, country, photo, tg_id))
             db.commit()
+
+    def kipoha_add_survey(self, tg_id, idea, propblem):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO surveys VALUES (?,?,?,?)"""
+            cursor.execute(query, (None, idea, propblem, tg_id,))
+            db.commit()
+
+    def kipoha_get_survey(self):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """SELECT * FROM surveys"""
+            cursor.execute(query)
+            return cursor.fetchall()
+
+    def kipoha_select_survey(self, id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """SELECT * FROM surveys WHERE id = ?"""
+            cursor.execute(query, (id,))
+            return cursor.fetchone()

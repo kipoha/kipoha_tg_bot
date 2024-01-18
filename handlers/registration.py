@@ -150,6 +150,7 @@ async def load_photo(message: types.Message, state: FSMContext):
         chat_id=message.from_user.id,
         text='U have successfully Registered'
     )
+    await state.finish()
 
 
 

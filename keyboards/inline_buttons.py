@@ -18,9 +18,11 @@ async def kipoha_start_keyboard():
         "Registration ✅",
         callback_data="reg"
     )
-    markup.add(question_button)
-    markup.add(ban)
-    markup.add(reg)
+    survey = InlineKeyboardButton(
+        "Survey 💡",
+        callback_data="sur"
+    )
+    markup.add(question_button, ban, reg, survey)
     return markup
 
 

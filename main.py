@@ -7,6 +7,10 @@ from handlers import (
     check_ban,
     registration,
     # update_profile,
+    survey,
+)
+from handlers.admin import (
+    check_survey
 )
 from database import databases
 
@@ -21,6 +25,8 @@ questionnaire.reg_questionnaire_handlers(dp=dp)
 check_ban.reg_bans_handlers(dp=dp)
 registration.reg_registration_handlers(dp=dp)
 # update_profile.reg_update_profile_handlers(dp=dp)
+survey.reg_survey_handlers(dp=dp)
+check_survey.reg_adm_survey_handlers(dp=dp)
 chat_actions.reg_chat_actions_handlers(dp=dp)
 
 if __name__ == "__main__":
