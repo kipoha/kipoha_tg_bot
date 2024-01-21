@@ -8,6 +8,7 @@ from handlers import (
     registration,
     # update_profile,
     survey,
+    profile
 )
 from handlers.admin import (
     check_survey
@@ -27,6 +28,7 @@ registration.reg_registration_handlers(dp=dp)
 # update_profile.reg_update_profile_handlers(dp=dp)
 survey.reg_survey_handlers(dp=dp)
 check_survey.reg_adm_survey_handlers(dp=dp)
+profile.reg_profile_handlers(dp=dp)
 chat_actions.reg_chat_actions_handlers(dp=dp)
 
 if __name__ == "__main__":

@@ -42,6 +42,25 @@ class DataBase:
                 idea TEXT,
                 problems TEXT,
                 telegram_id INTEGER
+            );
+            
+            CREATE TABLE IF NOT EXISTS admin_raiting (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                admin_telegram_id INTEGER,
+                telegram_id INTEGER,
+                raiting INTEGER
+            );
+            CREATE TABLE IF NOT EXISTS like_system (
+                id INTEGER PRIMARY KEY,
+                owner_telegram_id INTEGER,
+                liker_telegram_id INTEGER,
+                UNIQUE (owner_telegram_id, liker_telegram_id)
+            );
+            CREATE TABLE IF NOT EXISTS dislike_system (
+                id INTEGER PRIMARY KEY,
+                owner_telegram_id INTEGER,
+                disliker_telegram_id INTEGER,
+                UNIQUE (owner_telegram_id, disliker_telegram_id)
             )
             """
             cursor.executescript(query)
@@ -98,6 +117,17 @@ class DataBase:
     def kipoha_select_profile(self, tg_id):
         with sqlite3.connect(self.name) as db:
             cursor = db.cursor()
+            cursor.row_factory = lambda cursor, row: {
+            'id': row[0],
+            'telegram_id': row[1],
+            'nickname': row[2],
+            'bio': row[3],
+            'age': row[4],
+            'sign': row[5],
+            'games': row[6],
+            'country': row[7],
+            'photo': row[8],
+            }
             query = """SELECT * FROM profile WHERE telegram_id = ?"""
             cursor.execute(query, (tg_id,))
             return cursor.fetchone()
@@ -136,3 +166,56 @@ class DataBase:
             query = """SELECT * FROM surveys WHERE id = ?"""
             cursor.execute(query, (id,))
             return cursor.fetchone()
+
+    def kipoha_add_rate(self, adm_tg_id, tg_id, rate):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO admin_raiting VALUES (?,?,?,?)"""
+            cursor.execute(query, (None, adm_tg_id, tg_id, rate))
+            db.commit()
+
+    # def kipoha_select_all_profile(self):
+    #     with sqlite3.connect(self.name) as db:
+    #         cursor = db.cursor()
+    #         query = """SELECT * FROM profile"""
+    #         cursor.execute(query)
+    #         return cursor.fetchall()
+
+    def kipoha_add_like(self, owner, liker):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO like_system VALUES (?,?,?)"""
+            cursor.execute(query, (None, owner, liker,))
+            db.commit()
+
+
+    def kipoha_add_dislike(self, owner, disliker):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO dislike_system VALUES (?,?,?)"""
+            cursor.execute(query, (None, owner, disliker,))
+            db.commit()
+
+    def kipoha_select_all_profiles(self, owner):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            cursor.row_factory = lambda cursor, row: {
+                'id': row[0],
+                'telegram_id': row[1],
+                'nickname': row[2],
+                'bio': row[3],
+                'age': row[4],
+                'sign': row[5],
+                'games': row[6],
+                'country': row[7],
+                'photo': row[8],
+            }
+            query = """SELECT *
+                       FROM profile
+                       LEFT JOIN like_system ON profile.telegram_id = like_system.owner_telegram_id AND like_system.liker_telegram_id = ?
+                       LEFT JOIN dislike_system ON profile.telegram_id = dislike_system.owner_telegram_id AND dislike_system.disliker_telegram_id = ?
+                       WHERE like_system.id IS NULL AND dislike_system.id IS NULL AND profile.telegram_id != ?
+                    """
+            cursor.execute(query, (owner, owner, owner))
+            return cursor.fetchall()
+

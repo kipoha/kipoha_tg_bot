@@ -56,14 +56,42 @@ async def load_numb_survey(message: types.Message, state: FSMContext):
     await bot.send_message(
         chat_id=message.from_user.id,
         text=text,
-        parse_mode="MarkdownV2"
+        parse_mode="MarkdownV2",
+        reply_markup=await inline_buttons.kipoha_rate_button()
     )
     await state.finish()
+
+async def send_rate(message: types.Message, state: FSMContext):
+    db = databases.DataBase()
+    async with state.proxy() as data:
+        user = db.kipoha_select_survey(data['check_survey'])
+    try:
+        await bot.send_message(
+            chat_id=user[3],
+            text='idk'
+        )
+        await bot.send_message(
+            chat_id=message.from_user.id,
+            text=f'Idea'
+        )
+    except:
+        await bot.send_message(
+            chat_id=message.from_user.id,
+            text=f'no'
+        )
 
 def reg_adm_survey_handlers(dp: Dispatcher):
     dp.register_message_handler(
         check_survey,
         commands=['check_adm_survey']
+    )
+    dp.register_callback_query_handler(
+        check_survey,
+        lambda call: call.data == 'back'
+    )
+    dp.register_callback_query_handler(
+        send_rate,
+        lambda call: call.data == 'reply'
     )
     dp.register_message_handler(
         load_numb_survey,

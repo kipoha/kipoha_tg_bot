@@ -22,7 +22,15 @@ async def kipoha_start_keyboard():
         "Survey 💡",
         callback_data="sur"
     )
-    markup.add(question_button, ban, reg, survey)
+    my_profile_button = InlineKeyboardButton(
+        "Profile 🗒️",
+        callback_data="my_profile"
+    )
+    view_profiles_button = InlineKeyboardButton(
+        "View Profiles 🧑🏻‍💻",
+        callback_data="view_profiles"
+    )
+    markup.add(question_button, ban, reg, survey, my_profile_button, view_profiles_button)
     return markup
 
 
@@ -126,4 +134,46 @@ async def kipoha_select_profile_button():
         callback_data="photo"
     )
     markup.add(nick, bio, age, sign, f_game, country, photo)
+    return markup
+
+async def like_dislike_keyboard(owner):
+    markup = InlineKeyboardMarkup()
+    like_button = InlineKeyboardButton(
+        "Like 👍🏻",
+        callback_data=f"like_{owner}"
+    )
+    dislike_button = InlineKeyboardButton(
+        "Dislike 👎🏻",
+        callback_data=f"dis_{owner}"
+    )
+    markup.add(like_button)
+    markup.add(dislike_button)
+    return markup
+
+
+async def my_profile_keyboard():
+    markup = InlineKeyboardMarkup()
+    like_button = InlineKeyboardButton(
+        "Update 💵",
+        callback_data=f"update_profile"
+    )
+    dislike_button = InlineKeyboardButton(
+        "Delete ❌",
+        callback_data="delete_profile"
+    )
+    markup.add(like_button)
+    markup.add(dislike_button)
+    return markup
+
+async def kipoha_rate_button():
+    markup = InlineKeyboardMarkup()
+    reply = InlineKeyboardButton(
+        "Reply",
+        callback_data="reply"
+    )
+    back = InlineKeyboardButton(
+        "Back",
+        callback_data="back"
+    )
+    markup.add(reply, back)
     return markup
