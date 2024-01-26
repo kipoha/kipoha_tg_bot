@@ -58,7 +58,7 @@ async def referal_list(call: types.CallbackQuery):
     n = 0
     for t in result:
         n += 1
-        text += f"{n}. {t[3]}"
+        text += f"\n{n}. {t[3]}"
 
     await bot.send_message(
         chat_id=call.from_user.id,
