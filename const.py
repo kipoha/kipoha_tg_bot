@@ -15,3 +15,9 @@ PROFILE_TEXT = "Nickname: {nickname}\n" \
                "Zodiac-Sign: {sign}\n" \
                "Favorite games: {games}\n" \
                "Country: {country}"
+
+REFERENCE_MENU_TEXT = "Welcome to the Referral Menu, {user}\n" \
+                      "U can earn money by sharing " \
+                      "link to invite other people (friends ext)\n" \
+                      "U can press button to generate link\n" \
+                      "Total-Referrals: {total}"

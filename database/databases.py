@@ -14,6 +14,7 @@ class DataBase:
                 username CHAR(50),
                 first_name CHAR(50),
                 last_name CHAR(50),
+                reference_link TEXT,
                 UNIQUE (telegram_id)
                 );
                 
@@ -61,7 +62,22 @@ class DataBase:
                 owner_telegram_id INTEGER,
                 disliker_telegram_id INTEGER,
                 UNIQUE (owner_telegram_id, disliker_telegram_id)
-            )
+            );
+            CREATE TABLE IF NOT EXISTS reference_users (
+            id INTEGER PRIMARY KEY,
+            owner_telegram_id INTEGER,
+            referral_telegram_id INTEGER,
+            UNIQUE (owner_telegram_id, referral_telegram_id)
+            );
+            
+            CREATE TABLE IF NOT EXISTS wallet (
+            id INTEGER PRIMARY KEY,
+            telegram_id INTEGER,
+            balance INTEGER,
+            UNIQUE (telegram_id)
+            );
+            
+            ALTER TABLE users ADD COLUMN reference_link TEXT
             """
             cursor.executescript(query)
             db.commit()
@@ -69,8 +85,8 @@ class DataBase:
     def kipoha_add_user(self, tg_id, username, first_name, last_name):
         with sqlite3.connect(self.name) as db:
             cursor = db.cursor()
-            query = """INSERT INTO users VALUES (?,?,?,?,?)"""
-            cursor.execute(query, (None, tg_id, username, first_name, last_name))
+            query = """INSERT INTO users VALUES (?,?,?,?,?,?)"""
+            cursor.execute(query, (None, tg_id, username, first_name, last_name, None))
             db.commit()
 
     def kipoha_add_profile(self, tg_id, nickname, bio, age, sign, games, country, photo):
@@ -219,3 +235,97 @@ class DataBase:
             cursor.execute(query, (owner, owner, owner))
             return cursor.fetchall()
 
+    def kipoha_select_user_referral(self, owner):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            cursor.row_factory = lambda cursor, row: {
+                'total_referrals': row[0],
+            }
+            query = """SELECT
+                            COUNT(reference_users.id) as total_referrals
+                       FROM
+                            users
+                       LEFT JOIN
+                            reference_users ON users.telegram_id = reference_users.owner_telegram_id
+                       WHERE
+                            users.telegram_id = ?
+                    """
+            cursor.execute(query, (owner,))
+            return cursor.fetchone()
+
+    def kipoha_select_user(self, tg_id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            cursor.row_factory = lambda cursor, row: {
+                'id': row[0],
+                'telegram_id': row[1],
+                'username': row[2],
+                'first_name': row[3],
+                'last_name': row[4],
+                'link': row[5],
+            }
+            query = """SELECT * FROM users WHERE telegram_id = ?"""
+            cursor.execute(query, (tg_id,))
+            return cursor.fetchone()
+
+    def kipoha_update_link(self, link, tg_id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """UPDATE users SET reference_link = ? WHERE telegram_id = ?"""
+            cursor.execute(query, (link, tg_id))
+            db.commit()
+
+    def kipoha_select_user_by_link(self, link):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            cursor.row_factory = lambda cursor, row: {
+                'id': row[0],
+                'telegram_id': row[1],
+                'username': row[2],
+                'first_name': row[3],
+                'last_name': row[4],
+                'link': row[5],
+            }
+            query = """SELECT * FROM users WHERE reference_link = ?"""
+            cursor.execute(query, (link,))
+            return cursor.fetchone()
+
+    def kipoha_add_referral(self, owner, referral):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO reference_users VALUES (?,?,?)"""
+            cursor.execute(query, (None, owner, referral,))
+            db.commit()
+
+    def kipoha_get_referral(self, ref_tg_id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """SELECT * FROM reference_users WHERE owner_telegram_id = ?"""
+            cursor.execute(query, (ref_tg_id,))
+            return cursor.fetchall()
+
+    def kipoha_add_wallet(self, tg_id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO wallet VALUES (?,?,?)"""
+            cursor.execute(query, (None, tg_id, 0,))
+            db.commit()
+
+    def kipoha_get_wallet(self, tg_id):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            cursor.row_factory = lambda cursor, row: {
+                'id': row[0],
+                'telegram_id': row[1],
+                'balance': row[2],
+            }
+            query = """SELECT * FROM wallet WHERE telegram_id = ?"""
+            cursor.execute(query, (tg_id,))
+            return cursor.fetchone()
+
+    def kipoha_update_bal_referral(self, tg_id, money=100):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """UPDATE wallet SET balance = COALESCE(balance, 0) + ? WHERE telegram_id = ?"""
+            cursor.execute(query, (money, tg_id))
+            db.commit()

@@ -30,7 +30,11 @@ async def kipoha_start_keyboard():
         "View Profiles 🧑🏻‍💻",
         callback_data="view_profiles"
     )
-    markup.add(question_button, ban, reg, survey, my_profile_button, view_profiles_button)
+    reference_button = InlineKeyboardButton(
+        "Referral Menu 🧐",
+        callback_data="reference_menu"
+    )
+    markup.add(question_button, ban, reg, survey, my_profile_button, view_profiles_button, reference_button)
     return markup
 
 
@@ -176,4 +180,21 @@ async def kipoha_rate_button():
         callback_data="back"
     )
     markup.add(reply, back)
+    return markup
+
+async def referral_keyboard():
+    markup = InlineKeyboardMarkup()
+    generate_button = InlineKeyboardButton(
+        "Generate Link 🔗",
+        callback_data="generate_link"
+    )
+    list_ref_button = InlineKeyboardButton(
+        "Referral list 😎",
+        callback_data="list_ref_link"
+    )
+    balance_button = InlineKeyboardButton(
+        "Balance 💳",
+        callback_data = "check_bal"
+    )
+    markup.add(generate_button, list_ref_button, balance_button)
     return markup
