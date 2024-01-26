@@ -37,7 +37,7 @@ async def generate_link(call: types.CallbackQuery):
         )
         await bot.send_message(
             chat_id=call.from_user.id,
-            text=f"Here is ur new link: {user['link']}",
+            text=f"Here is ur new link: {link}",
         )
     else:
         await bot.send_message(
