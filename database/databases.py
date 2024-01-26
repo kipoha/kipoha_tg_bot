@@ -67,6 +67,7 @@ class DataBase:
             id INTEGER PRIMARY KEY,
             owner_telegram_id INTEGER,
             referral_telegram_id INTEGER,
+            referral_name TEXT,
             UNIQUE (owner_telegram_id, referral_telegram_id)
             );
             
@@ -75,9 +76,10 @@ class DataBase:
             telegram_id INTEGER,
             balance INTEGER,
             UNIQUE (telegram_id)
-            );
+            );            
+            ALTER TABLE reference_users ADD COLUMN referral_name TEXT;
+            ALTER TABLE users ADD COLUMN reference_link TEXT;
             
-            ALTER TABLE users ADD COLUMN reference_link TEXT
             """
             cursor.executescript(query)
             db.commit()
@@ -290,11 +292,11 @@ class DataBase:
             cursor.execute(query, (link,))
             return cursor.fetchone()
 
-    def kipoha_add_referral(self, owner, referral):
+    def kipoha_add_referral(self, owner, referral, referral_name):
         with sqlite3.connect(self.name) as db:
             cursor = db.cursor()
-            query = """INSERT INTO reference_users VALUES (?,?,?)"""
-            cursor.execute(query, (None, owner, referral,))
+            query = """INSERT INTO reference_users VALUES (?,?,?,?)"""
+            cursor.execute(query, (None, owner, referral, referral_name,))
             db.commit()
 
     def kipoha_get_referral(self, ref_tg_id):

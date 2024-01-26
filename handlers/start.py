@@ -52,7 +52,8 @@ async def kipoha_start(message: types.Message):
             if not ref:
                 db.kipoha_add_referral(
                     owner=owner['telegram_id'],
-                    referral=message.from_user.id
+                    referral=message.from_user.id,
+                    referral_name=message.from_user.first_name
                 )
                 db.kipoha_update_bal_referral(
                     tg_id=owner['telegram_id'],
