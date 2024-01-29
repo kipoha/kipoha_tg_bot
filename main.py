@@ -23,6 +23,7 @@ async def on_startup(_):
     db = databases.DataBase()
     try:
         db.kipoha_create_table()
+        print('table')
     except sqlite3.OperationalError as e:
         pass
 

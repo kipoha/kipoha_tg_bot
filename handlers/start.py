@@ -1,11 +1,15 @@
+import random
 import sqlite3
 
 from aiogram import types, Dispatcher
+
+import database.databases
 from config import bot, MEDIA_DESTINATION
 from database import databases
 from keyboards import inline_buttons
 from const import START_MENU
 from aiogram.utils.deep_linking import _create_link
+from scraping.anecdot import NewsScraper
 
 
 async def kipoha_start(message: types.Message):
@@ -71,5 +75,41 @@ async def kipoha_start(message: types.Message):
             reply_markup=await inline_buttons.kipoha_start_keyboard()
         )
 
+async def random_anecdot(call: types.CallbackQuery):
+    db = databases.DataBase()
+    scraper = NewsScraper()
+    data = scraper.parse_data()
+
+    text = random.choice(data)
+
+    text = text.replace('<div class="text">', '')
+    text = text.replace('<br>', '\n')
+    text = text.replace('</div>', '')
+    await bot.send_message(
+        chat_id=call.from_user.id,
+        text=text,
+        reply_markup=await inline_buttons.anecdots_keyboard()
+    )
+    db.kipoha_add_anecdot(
+        text=text,
+        tg_id=call.from_user.id,
+        username=call.from_user.first_name
+    )
+
+async def kipoha_start_button(call: types.CallbackQuery):
+
+    with open(MEDIA_DESTINATION + "1705332202502.png", "rb") as ph:
+        await bot.send_photo(
+            chat_id=call.from_user.id,
+            photo=ph,
+            caption=START_MENU.format(
+                name=call.from_user.first_name
+            ),
+            reply_markup=await inline_buttons.kipoha_start_keyboard()
+        )
+
+
 def reg_kipoha_start_handlers(dp: Dispatcher):
     dp.register_message_handler(kipoha_start, commands=['start'])
+    dp.register_callback_query_handler(random_anecdot, lambda call: call.data == 'anecdots')
+    dp.register_callback_query_handler(kipoha_start_button, lambda call: call.data == 'back_to_start')

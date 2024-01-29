@@ -76,7 +76,15 @@ class DataBase:
             telegram_id INTEGER,
             balance INTEGER,
             UNIQUE (telegram_id)
-            );            
+            );
+            
+            CREATE TABLE IF NOT EXISTS anecdots (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            anecdot TEXT,
+            telegram_id INTEGER,
+            username TEXT
+            );
+            
             ALTER TABLE reference_users ADD COLUMN referral_name TEXT;
             ALTER TABLE users ADD COLUMN reference_link TEXT;
             
@@ -330,4 +338,11 @@ class DataBase:
             cursor = db.cursor()
             query = """UPDATE wallet SET balance = COALESCE(balance, 0) + ? WHERE telegram_id = ?"""
             cursor.execute(query, (money, tg_id))
+            db.commit()
+
+    def kipoha_add_anecdot(self, text, tg_id, username):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO anecdots VALUES (?,?,?,?)"""
+            cursor.execute(query, (None, text, tg_id, username,))
             db.commit()
