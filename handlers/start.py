@@ -10,6 +10,8 @@ from keyboards import inline_buttons
 from const import START_MENU
 from aiogram.utils.deep_linking import _create_link
 from scraping.anecdot import NewsScraper
+from scraping.newscraping import AsyncNewsScraper
+import asyncio
 
 
 async def kipoha_start(message: types.Message):
@@ -77,11 +79,9 @@ async def kipoha_start(message: types.Message):
 
 async def random_anecdot(call: types.CallbackQuery):
     db = databases.DataBase()
-    scraper = NewsScraper()
-    data = scraper.parse_data()
-
-    text = random.choice(data)
-
+    scraper = AsyncNewsScraper()
+    texts = await scraper.get_data()
+    text = random.choice(texts)
     text = text.replace('<div class="text">', '')
     text = text.replace('<br>', '\n')
     text = text.replace('</div>', '')
@@ -95,6 +95,25 @@ async def random_anecdot(call: types.CallbackQuery):
         tg_id=call.from_user.id,
         username=call.from_user.first_name
     )
+
+    # scraper = NewsScraper()
+    # data = scraper.parse_data()
+    #
+    # text = random.choice(data)
+    #
+    # text = text.replace('<div class="text">', '')
+    # text = text.replace('<br>', '\n')
+    # text = text.replace('</div>', '')
+    # await bot.send_message(
+    #     chat_id=call.from_user.id,
+    #     text=text,
+    #     reply_markup=await inline_buttons.anecdots_keyboard()
+    # )
+    # db.kipoha_add_anecdot(
+    #     text=text,
+    #     tg_id=call.from_user.id,
+    #     username=call.from_user.first_name
+    # )
 
 async def kipoha_start_button(call: types.CallbackQuery):
 

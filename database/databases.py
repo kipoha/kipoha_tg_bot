@@ -85,6 +85,13 @@ class DataBase:
             username TEXT
             );
             
+            CREATE TABLE IF NOT EXISTS icons (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            icon_url TEXT,
+            telegram_id INTEGER,
+            username TEXT
+            );
+            
             ALTER TABLE reference_users ADD COLUMN referral_name TEXT;
             ALTER TABLE users ADD COLUMN reference_link TEXT;
             
@@ -345,4 +352,11 @@ class DataBase:
             cursor = db.cursor()
             query = """INSERT INTO anecdots VALUES (?,?,?,?)"""
             cursor.execute(query, (None, text, tg_id, username,))
+            db.commit()
+
+    def kipoha_add_icon(self, url, tg_id, username):
+        with sqlite3.connect(self.name) as db:
+            cursor = db.cursor()
+            query = """INSERT INTO anecdots VALUES (?,?,?,?)"""
+            cursor.execute(query, (None, url, tg_id, username,))
             db.commit()
