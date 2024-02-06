@@ -9,8 +9,8 @@ from database import databases
 from keyboards import inline_buttons
 from const import START_MENU
 from aiogram.utils.deep_linking import _create_link
-from scraping.anecdot import NewsScraper
-from scraping.newscraping import AsyncNewsScraper
+# from scraping.anecdot import NewsScraper
+# from scraping.newscraping import AsyncNewsScraper
 import asyncio
 
 
@@ -76,25 +76,25 @@ async def kipoha_start(message: types.Message):
             ),
             reply_markup=await inline_buttons.kipoha_start_keyboard()
         )
-
-async def random_anecdot(call: types.CallbackQuery):
-    db = databases.DataBase()
-    scraper = AsyncNewsScraper()
-    texts = await scraper.get_data()
-    text = random.choice(texts)
-    text = text.replace('<div class="text">', '')
-    text = text.replace('<br>', '\n')
-    text = text.replace('</div>', '')
-    await bot.send_message(
-        chat_id=call.from_user.id,
-        text=text,
-        reply_markup=await inline_buttons.anecdots_keyboard()
-    )
-    db.kipoha_add_anecdot(
-        text=text,
-        tg_id=call.from_user.id,
-        username=call.from_user.first_name
-    )
+#
+# async def random_anecdot(call: types.CallbackQuery):
+#     db = databases.DataBase()
+#     scraper = AsyncNewsScraper()
+#     texts = await scraper.get_data()
+#     text = random.choice(texts)
+#     text = text.replace('<div class="text">', '')
+#     text = text.replace('<br>', '\n')
+#     text = text.replace('</div>', '')
+#     await bot.send_message(
+#         chat_id=call.from_user.id,
+#         text=text,
+#         reply_markup=await inline_buttons.anecdots_keyboard()
+#     )
+#     db.kipoha_add_anecdot(
+#         text=text,
+#         tg_id=call.from_user.id,
+#         username=call.from_user.first_name
+#     )
 
     # scraper = NewsScraper()
     # data = scraper.parse_data()
@@ -130,5 +130,5 @@ async def kipoha_start_button(call: types.CallbackQuery):
 
 def reg_kipoha_start_handlers(dp: Dispatcher):
     dp.register_message_handler(kipoha_start, commands=['start'])
-    dp.register_callback_query_handler(random_anecdot, lambda call: call.data == 'anecdots')
-    dp.register_callback_query_handler(kipoha_start_button, lambda call: call.data == 'back_to_start')
+    # dp.register_callback_query_handler(random_anecdot, lambda call: call.data == 'anecdots')
+    # dp.register_callback_query_handler(kipoha_start_button, lambda call: call.data == 'back_to_start')

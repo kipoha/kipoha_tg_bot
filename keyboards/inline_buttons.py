@@ -34,11 +34,11 @@ async def kipoha_start_keyboard():
         "Referral Menu 🧐",
         callback_data="reference_menu"
     )
-    anecdot_button = InlineKeyboardButton(
-        "Random anecdot 😂",
-        callback_data="anecdots"
-    )
-    markup.add(question_button, ban, reg, survey, my_profile_button, view_profiles_button, reference_button, anecdot_button)
+    # anecdot_button = InlineKeyboardButton(
+    #     "Random anecdot 😂",
+    #     callback_data="anecdots"
+    # )
+    markup.add(question_button, ban, reg, survey, my_profile_button, view_profiles_button, reference_button)
     return markup
 
 
@@ -203,15 +203,15 @@ async def referral_keyboard():
     markup.add(generate_button, list_ref_button, balance_button)
     return markup
 
-async def anecdots_keyboard():
-    markup = InlineKeyboardMarkup()
-    back = InlineKeyboardButton(
-        "Back",
-        callback_data="back_to_start"
-    )
-    anecdot_button = InlineKeyboardButton(
-        "Random anecdot 😂",
-        callback_data="anecdots"
-    )
-    markup.add(back, anecdot_button)
-    return markup
+# async def anecdots_keyboard():
+#     markup = InlineKeyboardMarkup()
+#     back = InlineKeyboardButton(
+#         "Back",
+#         callback_data="back_to_start"
+#     )
+#     anecdot_button = InlineKeyboardButton(
+#         "Random anecdot 😂",
+#         callback_data="anecdots"
+#     )
+#     markup.add(back, anecdot_button)
+#     return markup
